@@ -39,6 +39,35 @@
 
 // export default RedirectLink;
 
+// import { useEffect } from "react";
+// import { useParams } from "react-router-dom";
+// import { getLongUrl } from "../db/apiUrls";
+
+// function RedirectLink() {
+//   const { id } = useParams();
+
+//   useEffect(() => {
+//     async function fetchAndRedirect() {
+//       const data = await getLongUrl(id);
+//       if (data && data.original_url) {
+//         window.location.href = data.original_url;
+//       }else{
+//         // Show error or redirect to a 404 page
+//         window.location.replace("/not-found");
+//       }
+//     }
+//     fetchAndRedirect();
+//   }, [id]);
+
+//   return (
+//     <div>
+//       <h2>Redirecting...</h2>
+//     </div>
+//   );
+// }
+
+// export default RedirectLink;
+
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getLongUrl } from "../db/apiUrls";
@@ -50,7 +79,12 @@ function RedirectLink() {
     async function fetchAndRedirect() {
       const data = await getLongUrl(id);
       if (data && data.original_url) {
-        window.location.href = data.original_url;
+        let url = data.original_url;
+        // Ensure the URL starts with http:// or https://
+        if (!/^https?:\/\//i.test(url)) {
+          url = "https://" + url;
+        }
+        window.location.href = url;
       } else {
         // Show error or redirect to a 404 page
         window.location.replace("/not-found");
