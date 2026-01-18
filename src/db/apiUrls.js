@@ -51,12 +51,12 @@ export async function createUrl({title, longUrl, customUrl, user_id}, qrcode) {
   const fileName = `qr-${short_url}`;
 
   const {error: storageError} = await supabase.storage
-    .from("qr")
+    .from("qrs")
     .upload(fileName, qrcode);
 
   if (storageError) throw new Error(storageError.message);
 
-  const qr = `${supabaseUrl}/storage/v1/object/public/qr//${fileName}`;
+  const qr = `${supabaseUrl}/storage/v1/object/public/qrs//${fileName}`;
 
   const {data, error} = await supabase
     .from("urls")
@@ -106,7 +106,7 @@ export const storeClicks = async ({id, originalUrl}) => {
 export async function deleteUrl(id){
   const {data, error} = await supabase.from("urls").delete().eq("id", id);
 
-  if (error) {
+  if(error){
     console.error(error);
     throw new Error("Unable to delete Url");
   }
